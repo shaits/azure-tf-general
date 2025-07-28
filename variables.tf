@@ -10,3 +10,7 @@ variable "keyvault_name" {
   default = "dev-keyvault-shayts"
 }
 
+variable "storage_name" {
+  default = "securestgacct999"
+}
+

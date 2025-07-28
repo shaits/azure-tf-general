@@ -24,3 +24,11 @@ module "keyvault" {
   resource_group_name = var.resource_group_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
 }
+
+module "storage" {
+  source              = "./modules/storage"
+  name                = var.storage_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  private_subnet_id   = module.network.private_subnet_id
+}
