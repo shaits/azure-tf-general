@@ -32,3 +32,10 @@ module "storage" {
   resource_group_name = var.resource_group_name
   private_subnet_id   = module.network.private_subnet_id
 }
+
+module "sp" {
+  source              = "./modules/sp"
+  display_name        = "dev-sp-shayts"
+  keyvault_scope      = module.keyvault.keyvault_id
+  storage_scope       = module.storage.storage_account_id
+}
