@@ -6,3 +6,7 @@ variable "location" {
   default = "East US"
 }
 
+variable "keyvault_name" {
+  default = "dev-keyvault-shayts"
+}
+
