@@ -33,3 +33,9 @@ resource "azurerm_subnet_nat_gateway_association" "nat_assoc" {
   subnet_id      = azurerm_subnet.private.id
   nat_gateway_id = azurerm_nat_gateway.nat.id
 }
+
+
+resource "azurerm_nat_gateway_public_ip_association" "example" {
+  nat_gateway_id       = azurerm_nat_gateway.nat.id
+  public_ip_address_id = azurerm_public_ip.nat_ip.id
+}

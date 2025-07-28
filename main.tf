@@ -39,3 +39,10 @@ module "sp" {
   keyvault_scope      = module.keyvault.keyvault_id
   storage_scope       = module.storage.storage_account_id
 }
+
+module "vm" {
+  source              = "./modules/vm"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = module.network.private_subnet_id
+}
