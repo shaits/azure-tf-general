@@ -32,7 +32,7 @@ variable "aks_config" {
     cluster_name = "dev-aks-cluster"
     dns_prefix   = "dev-aks"
     node_count   = 2
-    vm_size      = "Standard_DS2_v2"
+    vm_size      = "Standard_D2s_v3"
   }
 }
 

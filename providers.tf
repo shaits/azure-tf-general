@@ -36,7 +36,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes { # Helm v2 syntax
+  kubernetes { 
     host                   = module.aks.kube_host
     cluster_ca_certificate = base64decode(module.aks.kube_ca)
     client_certificate     = base64decode(module.aks.kube_client_certificate)
