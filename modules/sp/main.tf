@@ -11,11 +11,11 @@ resource "azurerm_user_assigned_identity" "eso" {
 resource "azurerm_role_assignment" "kv_role" {
   scope                = var.keyvault_scope
   role_definition_name = "Key Vault Secrets Officer"
-  principal_id         = azurerm_user_assigned_identity.eso.id
+  principal_id         = azurerm_user_assigned_identity.eso.principal_id
 }
 
 resource "azurerm_role_assignment" "stg_role" {
   scope                = var.storage_scope
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_user_assigned_identity.eso.id
+  principal_id         = azurerm_user_assigned_identity.eso.principal_id
 }
