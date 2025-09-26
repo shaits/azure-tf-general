@@ -19,7 +19,7 @@ module "storage" {
   name                = var.storage_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  private_subnet_id   = module.network.private_subnet_id
+  private_subnet_id   = ""
 }
 
 module "sp" {
@@ -40,6 +40,7 @@ module "aks" {
   node_count          = var.aks_config.node_count
   vm_size             = var.aks_config.vm_size
   tags                = var.tags
+  azurerm_user_assigned_identity_eso_id = module.sp.eso_id
 }
 
 
