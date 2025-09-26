@@ -35,3 +35,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "azurerm_user_assigned_identity_eso_id" {
+  description = "The ID of the User Assigned Identity for federated identity credential"
+  type        = string
+  default     = ""
+}
