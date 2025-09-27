@@ -58,8 +58,8 @@ resource "azurerm_linux_virtual_machine" "runner" {
   name                  = "github-runner"
   resource_group_name   = var.resource_group_name
   location              = var.location
-  size                  = "Standard_B1s"
-  admin_username        = "azureuser"
+  size                  = var.vm_size
+  admin_username        = var.username
   network_interface_ids = [azurerm_network_interface.nic.id]
   disable_password_authentication = false
   admin_password        = "P@ssword1234!"
