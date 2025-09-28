@@ -15,7 +15,7 @@ module "private_dns_zone" {
   owner_id            = each.value.owner_id
 
   #  pick existing VNet or one from a module
-  virtual_network_id = each.value.use_existing_vnet ? each.value.existing_vnet_id : module.vnet[each.value.from_module].id
+  virtual_network_id = each.value.use_existing_vnet ? each.value.existing_vnet_id : module.vnet[each.value.from_module].vnet_id
 }
 
 
@@ -64,4 +64,23 @@ resource "azurerm_role_assignment" "rbac" {
   scope                = each.value.scope
   role_definition_name = each.value.role_name
   principal_id         = var.user_object_id
+}
+
+variable "infra_array" {
+  description = "List of infra requests. Each object is passed directly to the relevant module."
+  type        = any
+}
+
+variable "rbac_requests" {
+  description = "List of RBAC role assignment requests."
+  type = list(object({
+    scope     = string
+    role_name = string
+  }))
+  default = []
+}
+
+variable "user_object_id" {
+  description = "The object ID of the user to assign RBAC roles to."
+  type        = string
 }

@@ -11,12 +11,4 @@ variable "private_subnet_id" {}
 variable "private_dns_zone_name" {
   description = "The name of the private DNS zone for the storage account"
   type        = string
-}   
-
-variable "kv_roles" {
-  description = "List of roles to assign to the Key Vault"
-  type        = list(string)
-  default     = ["Reader"]
 }
-
-

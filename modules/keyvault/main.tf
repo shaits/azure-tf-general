@@ -5,7 +5,7 @@ resource "azurerm_key_vault" "kv" {
   tenant_id                   = var.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
-  enable_rbac_authorization   = true
+  rbac_authorization_enabled   = true
 }
 
 resource "azurerm_private_endpoint" "kv_pe" {
@@ -29,6 +29,6 @@ resource "azurerm_private_dns_a_record" "record" {
   resource_group_name = var.resource_group_name
   ttl                 = 300
   records             = [
-    try(azurerm_private_endpoint.kv_pe.private_service_connection[0].private_ip_address, "")
+    try(azurerm_private_endpoint.kv_pe[0].private_service_connection[0].private_ip_address, "")
   ]
 }

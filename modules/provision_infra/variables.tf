@@ -49,6 +49,20 @@ variable "keyvault_name" {
   default     = var.user_id != "" ? "${var.user_id}-keyvault" : "default-keyvault"
 }
 
+# -------------------------------
+# Storage Config
+# -------------------------------
+variable "create_storage" {
+  description = "Whether to create a Storage Account"
+  type        = bool
+  default     = false
+}
+variable "storage_roles" {
+  description = "Roles to assign to the user for Storage Account"
+  type        = list(string)
+  default     = ["Storage Account Contributor", "Reader", "Storage Blob Data Contributor"]
+}
+
 variable "aks_config" {
   description = "AKS Configuration"
   type = object({
