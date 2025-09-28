@@ -28,6 +28,6 @@ resource "azurerm_private_dns_a_record" "record" {
   resource_group_name = var.resource_group_name
   ttl                 = 300
   records             = [
-    try(azurerm_private_endpoint.storage_pe.private_service_connection[0].private_ip_address, "")
+    try(azurerm_private_endpoint.storage_pe[0].private_service_connection[0].private_ip_address, "")
   ]
 }
