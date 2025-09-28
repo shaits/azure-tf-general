@@ -1,11 +1,3 @@
-resource "azurerm_public_ip" "vm_public_ip" {
-  name                = "vm-public-ip"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
-
 resource "azurerm_network_security_group" "nsg" {
   name                = "nsg-ssh"
   location            = var.location
@@ -76,3 +68,4 @@ resource "azurerm_linux_virtual_machine" "runner" {
     version   = "latest"
   }
 }
+

@@ -13,4 +13,10 @@ variable "private_dns_zone_name" {
   type        = string
 }   
 
+variable "kv_roles" {
+  description = "List of roles to assign to the Key Vault"
+  type        = list(string)
+  default     = ["Reader"]
+}
+
 

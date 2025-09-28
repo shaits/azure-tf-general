@@ -12,4 +12,10 @@ variable "private_dns_zone_name" {
   type        = string
 }   
 
+variable "storage_roles" {
+  description = "List of roles to assign to the Storage Account"
+  type        = list(string)
+  default     = ["Reader"]
+}
+
 
