@@ -1,17 +1,18 @@
+variable "rbac_requests" {
+  type = list(object({
+    scope     = string
+    role_name = string
+  }))
+  default = []
+}
+
 variable "user_object_id" {
-    description = "The object ID of the user to assign the roles to"
-    type        = string
-  
+  type = string
 }
 
-variable "resource_id" {
-    description = "The ID of the resource to assign the roles to"
-    type        = string
-
+locals {
+  rbac_map = {
+    for r in var.rbac_requests :
+    "${r.scope}-${r.role_name}" => r
+  }
 }
-
-variable "roles" {
-    description = "List of roles to assign to the resource"
-    type        = list(string)
-}
-

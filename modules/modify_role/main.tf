@@ -1,7 +1,6 @@
-
-resource "azurerm_role_assignment" "example" {
-  for_each             = toset(var.roles)
-  scope                = var.resource_id
-  role_definition_name = each.value
+resource "azurerm_role_assignment" "rbac" {
+  for_each             = local.rbac_map
+  scope                = each.value.scope
+  role_definition_name = each.value.role_name
   principal_id         = var.user_object_id
 }
