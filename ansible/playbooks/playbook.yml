@@ -1,0 +1,7 @@
+---
+# Master playbook that ties hosts to roles
+
+- hosts: ansible_slave
+  become: true
+  roles:
+    - kubernetes
