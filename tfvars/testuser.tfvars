@@ -3,21 +3,29 @@
 # -------------------------------
 infra_array = [
   {
+    module_name            = "keyvault"
+    name                   = "dhsagab-sharedkv"
+    location               = "East US"
+    publicly_accessible    = true
+    private_subnet_name    = "private-subnet" 
+    private_dns_zone_name  = "dns-zone"
+  }
+  
+  {
+    module_name           = "private_dns_zone"
+    name                  = "dns-zone"
+    owner_id              = "testuser"
+    vnet_name             = "vnet-secure"
+  }
+  ,
+  {
     module_name            = "vnet"
-    location                = "East US"
-    resource_group_name    = "dev-rg"
+    name                   = "vnet-secure"
     tags = {
       environment = "dev"
       owner_id        = "testuser"
     }
-  },
-  {
-    module_name           = "private_dns_zone"
-    resource_group_name   = "dev-rg"
-    owner_id              = "testuser"
-    use_existing_vnet     = false   # or true
-    existing_vnet_id      = ""      # only used if use_existing_vnet = true
-    from_module           = "vnet-0" # only used if use_existing_vnet = false
+    private_subnet_name   = "private-subnet"
   }
 ]
 
@@ -37,6 +45,9 @@ rbac_requests = [
 
 # -------------------------------
 user_object_id = "testuser"
+
+resource_group_name = "dev-rg"
+location            = "East US"
 
 
 

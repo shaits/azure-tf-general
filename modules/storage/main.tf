@@ -1,3 +1,11 @@
+data "azurerm_subnet" "subnet" {
+  count = var.publicly_accessible ? 0 : 1
+  name                = var.private_subnet_name
+  resource_group_name = var.resource_group_name
+  virtual_network_name = var.vnet_name
+}
+
+
 resource "azurerm_storage_account" "storage" {
   name                     = var.name
   resource_group_name      = var.resource_group_name
@@ -10,7 +18,7 @@ resource "azurerm_private_endpoint" "storage_pe" {
   name                = "storage-pe"
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = var.private_subnet_id
+  subnet_id           = data.azurerm_subnet.subnet[0].id
 
   private_service_connection {
     name                           = "storage-conn"
