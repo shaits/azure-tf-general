@@ -8,8 +8,11 @@ variable "infra_array" {
 variable "rbac_requests" {
   description = "List of RBAC role assignment requests."
   type = list(object({
-    scope     = string
-    role_name = string
+    module_name   = string
+    assignee_type  = string
+    assignee_name  = string
+    resource_name = string
+    role_name     = string
   }))
   default = []
 }
@@ -34,7 +37,7 @@ data "azurerm_client_config" "current" {}
 module "vnet" {
   for_each = {
     for r in var.infra_array :
-    "${r.module_name}-${r.name}" => r
+    "${r.name}" => r
     if r.module_name == "vnet"
   }
   source              = "./modules/vnet"
@@ -47,7 +50,7 @@ module "vnet" {
 module "private_dns_zone" {
   for_each = {
     for r in var.infra_array :
-    "${r.module_name}-${r.name}" => r
+    "${r.name}" => r
     if r.module_name == "private_dns_zone"
   }
   source              = "./modules/private_dns_zone"
@@ -59,7 +62,7 @@ module "private_dns_zone" {
 module "keyvault" {
   for_each = {
     for r in var.infra_array :
-    "${r.module_name}-${r.name}" => r
+    "${r.name}" => r
     if r.module_name == "keyvault"
   }
   name                  = each.value.name
@@ -76,7 +79,7 @@ module "keyvault" {
 module "storage" {
   for_each = {
     for r in var.infra_array :
-    "${r.module_name}-${r.name}" => r
+    "${r.name}" => r
     if r.module_name == "storage"
   }
   name                  = each.value.name
@@ -91,16 +94,62 @@ module "storage" {
 
 ///// RBAC Assignments /////
 
-locals {
-  rbac_map = {
+
+# Lookup all unique users
+data "azuread_user" "users" {
+  for_each = {
     for r in var.rbac_requests :
-    "${r.scope}-${r.role_name}" => r
+    r.assignee_name => r
+    if r.assignee_type == "user"
   }
+  user_principal_name = each.key
+}
+
+# Lookup all unique service principals
+data "azuread_service_principal" "sps" {
+  for_each = {
+    for r in var.rbac_requests :
+    r.assignee_name => r
+    if r.assignee_type == "service_principal"
+  }
+  display_name = each.key
+}
+
+# Lookup all unique groups
+data "azuread_group" "groups" {
+  for_each = {
+    for r in var.rbac_requests :
+    r.assignee_name => r
+    if r.assignee_type == "group"
+  }
+  display_name = each.key
+}
+
+locals {
+  resource_ids = merge(
+    { for k, v in module.vnet            : k => v.vnet_id },
+    { for k, v in module.private_dns_zone: k => v.private_dns_zone_id },
+    { for k, v in module.keyvault        : k => v.keyvault_id },
+    { for k, v in module.storage         : k => v.storage_account_id }
+  )
+
+  assignee_object_ids = merge(
+    { for k, v in data.azuread_user.users           : k => v.object_id },
+    { for k, v in data.azuread_service_principal.sps: k => v.object_id },
+    { for k, v in data.azuread_group.groups         : k => v.object_id }
+  )
+  
 }
 
 resource "azurerm_role_assignment" "rbac" {
-  for_each             = local.rbac_map
-  scope                = each.value.scope
+  for_each = {
+    for r in var.rbac_requests :
+    "${r.module_name}-${r.resource_name}-${r.role_name}" => r
+    if try(local.resource_ids["${r.resource_name}"], null) != null
+  }
+
+  scope                = local.resource_ids["${each.value.resource_name}"]
   role_definition_name = each.value.role_name
-  principal_id         = var.user_object_id
+  principal_id         = local.assignee_object_ids["${each.value.assignee_name}"]
 }
+

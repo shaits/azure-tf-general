@@ -7,15 +7,18 @@ infra_array = [
     name                   = "dhsagab-sharedkv"
     location               = "East US"
     publicly_accessible    = true
+    vnet_name             = "vnet-secure"
     private_subnet_name    = "private-subnet" 
     private_dns_zone_name  = "dns-zone"
-  }
+  },
   
   {
     module_name           = "private_dns_zone"
     name                  = "dns-zone"
     owner_id              = "testuser"
+    use_existing_vnet     = true
     vnet_name             = "vnet-secure"
+    
   }
   ,
   {
@@ -33,14 +36,13 @@ infra_array = [
 # RBAC Requests
 # -------------------------------
 rbac_requests = [
-  # {
-  #   scope     = "/subscriptions/xxxx/resourceGroups/dev-rg/providers/Microsoft.Storage/storageAccounts/team2sa"
-  #   role_name = "Storage Blob Data Contributor"
-  # },
-  # {
-  #   scope     = "/subscriptions/xxxx/resourceGroups/dev-rg/providers/Microsoft.KeyVault/vaults/sharedkv"
-  #   role_name = "Key Vault Secrets User"
-  # }
+  {
+    assignee_type = "user"
+    assignee_name = "testuser@shaitsabargmail.onmicrosoft.com"
+    module_name =  "storage"
+    resource_name = "dhsagab-sharedkv"
+    role_name = "Storage Blob Data Contributor"
+  }
 ]
 
 # -------------------------------
