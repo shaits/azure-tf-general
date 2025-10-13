@@ -153,3 +153,26 @@ resource "azurerm_role_assignment" "rbac" {
   principal_id         = local.assignee_object_ids["${each.value.assignee_name}"]
 }
 
+
+module "uami_eso" {
+  source              = "./modules/uami"
+  name                = "uami-eso"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags = {
+    environment = "dev"
+    owner       = "argocd"
+  }
+}
+
+
+module "aks" {
+  source              = "./modules/aks"
+  cluster_name        = "myAKSCluster"
+  location               = "East US"
+  resource_group_name = "dev-rg"
+  dns_prefix = "myaks"
+  azurerm_user_assigned_identity_eso_id = module.uami_eso.id
+
+}
+
