@@ -32,3 +32,9 @@ output "keyvault_uris" {
   description = "Map of Key Vault URIs created by the keyvault module"
   value       = can(module.keyvault) ? { for k, m in module.keyvault : k => m.keyvault_uri } : {}
 }
+
+output "kube_config" {
+  description = "Kubeconfig file for the AKS cluster"
+  value       = module.aks.kube_config
+  sensitive = true
+}
