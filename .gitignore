@@ -3,7 +3,7 @@
 *.tfstate.backup
 
 # Ignore Terraform lock file
-.terraform.lock.hcl
+*.terraform.lock.hcl
 
 # Ignore Terraform working directory
-.terraform/
+*.terraform/
