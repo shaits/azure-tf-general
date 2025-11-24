@@ -1,37 +1,5 @@
 # main.tf (router)
 
-variable "infra_array" {
-  description = "List of infra requests. Each object is passed directly to the relevant module."
-  type        = any
-}
-
-variable "rbac_requests" {
-  description = "List of RBAC role assignment requests."
-  type = list(object({
-    module_name   = string
-    assignee_type  = string
-    assignee_name  = string
-    resource_name = string
-    role_name     = string
-  }))
-  default = []
-}
-
-variable "user_object_id" {
-  description = "The object ID of the user to assign RBAC roles to."
-  type        = string
-}
-
-variable "resource_group_name" {
-  description = "The name of the resource group where resources will be created"
-  type        = string
-}
-
-variable "location" {
-  description = "The location where resources will be created"
-  type        = string
-}
-
 data "azurerm_client_config" "current" {}
 
 module "vnet" {
@@ -90,6 +58,28 @@ module "storage" {
   vnet_name             = each.value.vnet_name
   private_subnet_name   = each.value.private_subnet_name
   private_dns_zone_name = each.value.private_dns_zone_name
+}
+
+module "uami_eso" {
+  source              = "./modules/uami"
+  name                = "uami-eso"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags = {
+    environment = "dev"
+    owner       = "argocd"
+  }
+}
+
+
+module "aks" {
+  source              = "./modules/aks"
+  cluster_name        = "myAKSCluster"
+  location               = "East US"
+  resource_group_name = "dev-rg"
+  dns_prefix = "myaks"
+  azurerm_user_assigned_identity_eso_id = module.uami_eso.id
+
 }
 
 ///// RBAC Assignments /////
@@ -153,26 +143,4 @@ resource "azurerm_role_assignment" "rbac" {
   principal_id         = local.assignee_object_ids["${each.value.assignee_name}"]
 }
 
-
-module "uami_eso" {
-  source              = "./modules/uami"
-  name                = "uami-eso"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags = {
-    environment = "dev"
-    owner       = "argocd"
-  }
-}
-
-
-module "aks" {
-  source              = "./modules/aks"
-  cluster_name        = "myAKSCluster"
-  location               = "East US"
-  resource_group_name = "dev-rg"
-  dns_prefix = "myaks"
-  azurerm_user_assigned_identity_eso_id = module.uami_eso.id
-
-}
 
