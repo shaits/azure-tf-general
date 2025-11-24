@@ -44,12 +44,3 @@ provider "kubernetes" {
   client_certificate     = base64decode(module.aks.kube_client_certificate)
   client_key             = base64decode(module.aks.kube_client_key)
 }
-
-provider "helm" {
-  kubernetes {
-    host                   = module.aks.kube_host
-    cluster_ca_certificate = base64decode(module.aks.kube_ca)
-    client_certificate     = base64decode(module.aks.kube_client_certificate)
-    client_key             = base64decode(module.aks.kube_client_key)
-  }
-}
