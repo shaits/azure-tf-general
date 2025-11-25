@@ -21,15 +21,15 @@ infra_array = [
     
   # }
   # ,
-  # {
-  #   module_name            = "vnet"
-  #   name                   = "vnet-secure"
-  #   tags = {
-  #     environment = "dev"
-  #     owner_id        = "testuser"
-  #   }
-  #   private_subnet_name   = "private-subnet"
-  # }
+  {
+    module_name            = "vnet"
+    name                   = "vnet-secure"
+    tags = {
+      environment = "dev"
+      owner_id        = "testuser"
+    }
+    private_subnet_name   = "private-subnet"
+  }
 ]
 
 # -------------------------------
@@ -44,12 +44,6 @@ rbac_requests = [
   #   role_name = "Storage Blob Data Contributor"
   # }
 ]
-
-# -------------------------------
-user_object_id = "testuser"
-
-resource_group_name = "dev-rg"
-location            = "East US"
 
 
 
