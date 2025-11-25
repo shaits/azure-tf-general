@@ -47,7 +47,7 @@ class TerraformGenerator:
     def generate_providers_tf(self):
         output_path=os.path.join(self.tfdir_path,'providers.tf')
         rg_name = f"{self.env}-rg"
-        sa_name = f"{self.env}sa"
+        sa_name = f"{self.env}sta"
         key_name = f"{self.user_ad_id}.tfstate"
 
         content = f"""
@@ -55,7 +55,7 @@ terraform {{
   backend "azurerm" {{
     resource_group_name  = "{rg_name}"
     storage_account_name = "{sa_name}"
-    container_name       = "state_cont"
+    container_name       = "test-cont"
     key                  = "{key_name}"
   }}
 }}
@@ -66,8 +66,6 @@ provider "azurerm" {{
       purge_soft_delete_on_destroy    = true
       recover_soft_deleted_key_vaults = true
     }}
-  subscription_id = "2e5317af-6e7a-4222-97cd-3cdeec0f8757"
-  tenant_id       = "49f0f4f2-1880-42e8-8951-156da90f5697"
   }}
 }}
 
