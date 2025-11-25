@@ -6,7 +6,7 @@ import shutil
 
 
 class TerraformGenerator:
-    def __init__(self, user_ad_id: str, env: str, tfvars_path: str, tfdir_path:str , location: str = "East US"):
+    def __init__(self, user_ad_id: str, env: str, tfvars_path: str, tfdir_path:str , location: str = "Indonesia Central"):
         self.user_ad_id = user_ad_id
         self.env = env
         self.location = location
@@ -47,7 +47,7 @@ class TerraformGenerator:
     def generate_providers_tf(self):
         output_path=os.path.join(self.tfdir_path,'providers.tf')
         rg_name = f"{self.env}-rg"
-        sa_name = f"{self.env}sta"
+        sa_name = f"{self.env}sta".replace("-","")
         key_name = f"{self.user_ad_id}.tfstate"
 
         content = f"""
