@@ -81,8 +81,7 @@ provider "azurerm" {{
         output_path=os.path.join(self.tfdir_path,'variables.tf')
         content = f"""
 variable "infra_array" {{
-  type    = list(any)
-  default = []
+  type    = any
 }}
 
 variable "rbac_requests" {{
@@ -184,13 +183,22 @@ module "uami" {
     if r.module_name == "uami"
   }
   name                  = each.value.name
-  source                = "./modules/storage"
+  source                = "./modules/uami"
   location              = var.location
   resource_group_name   = var.resource_group_name
-  publicly_accessible   = each.value.publicly_accessible
-  vnet_name             = each.value.vnet_name
-  private_subnet_name   = each.value.private_subnet_name
-  private_dns_zone_name = each.value.private_dns_zone_name
+}
+
+module "aks" {
+  for_each = {
+    for r in var.infra_array :
+    "${r.name}" => r
+    if r.module_name == "aks"
+  }
+  cluster_name          = each.value.name
+  source                = "./modules/aks"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  dns_prefix   = each.value.dns_prefix
 }
 
 # RBAC assignments
