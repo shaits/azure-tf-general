@@ -177,25 +177,6 @@ module "storage" {
   private_dns_zone_name = each.value.private_dns_zone_name
 }
 
-module "uami_eso" {
-  source              = "./modules/uami"
-  name                = "uami-eso"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags = {
-    environment = var.env
-  }
-}
-
-module "aks" {
-  source              = "./modules/aks"
-  cluster_name        = "myAKSCluster"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  dns_prefix          = "myaks"
-  azurerm_user_assigned_identity_eso_id = module.uami_eso.id
-}
-
 # RBAC assignments
 
 data "azuread_user" "users" {
@@ -294,9 +275,9 @@ output "keyvault_uris" {
   value       = can(module.keyvault) ? { for k, m in module.keyvault : k => m.keyvault_uri } : {}
 }
 
-output "kube_config" {
+output "kube_configs" {
   description = "Kubeconfig file for the AKS cluster"
-  value       = module.aks.kube_config
+  value       = can(module.aks) ? { for k, m in module.aks : k => m.kube_config } : {}
   sensitive   = true
 }
 """
