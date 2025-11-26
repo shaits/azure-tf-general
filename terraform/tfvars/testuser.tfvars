@@ -22,6 +22,15 @@ infra_array = [
   # }
   # ,
   {
+    module_name            = "uami"
+    name                   = "uami-eso"
+    tags = {
+      environment = "dev"
+      owner_id        = "testuser"
+    }
+  },
+  
+  {
     module_name            = "vnet"
     name                   = "vnet-secure"
     tags = {
