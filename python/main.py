@@ -243,19 +243,32 @@ locals {
     { for k, v in data.azuread_service_principal.sps: k => v.object_id },
     { for k, v in data.azuread_group.groups         : k => v.object_id }
   )
+
+  rbac_entries = {
+    for r in var.rbac_requests :
+    "${r.module_name}-${r.resource_name}-${r.role_name}" => {
+      resource_name = r.resource_name
+      role_name     = r.role_name
+      assignee_name = r.assignee_name
+    }
+  }
 }
 
 resource "azurerm_role_assignment" "rbac" {
-  for_each = {
-    for r in var.rbac_requests :
-    "${r.module_name}-${r.resource_name}-${r.role_name}" => r
-    if try(local.resource_ids["${r.resource_name}"], null) != null
-  }
+  for_each = local.rbac_entries
 
-  scope                = local.resource_ids["${each.value.resource_name}"]
+  scope                = try(local.resource_ids[each.value.resource_name], null)
   role_definition_name = each.value.role_name
-  principal_id         = local.assignee_object_ids["${each.value.assignee_name}"]
+  principal_id         = local.assignee_object_ids[each.value.assignee_name]
+
+  depends_on = [
+    module.vnet,
+    module.storage,
+    module.keyvault,
+    module.private_dns_zone
+  ]
 }
+
 """
 
         Path(output_path).write_text(content.strip() + "\n")

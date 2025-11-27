@@ -2,23 +2,18 @@
 # General Settings
 # -------------------------------
 infra_array = [
-  {
-    module_name            = "uami"
-    name                   = "uami-eso"
-    tags = {
-      environment = "dev"
-      owner_id        = "testuser"
-    }
-  },
   
   {
-    module_name            = "vnet"
-    name                   = "vnet-secure"
+    module_name            = "storage"
+    name                   = "storagetestshaytsa"
     tags = {
       environment = "dev"
       owner_id        = "testuser"
     }
-    private_subnet_name   = "private-subnet"
+    publicly_accessible = true
+    vnet_name = ""
+    private_subnet_name = ""
+    private_dns_zone_name = ""
   }
 ]
 
@@ -26,13 +21,13 @@ infra_array = [
 # RBAC Requests
 # -------------------------------
 rbac_requests = [
-  # {
-  #   assignee_type = "user"
-  #   assignee_name = "testuser@shaitsabargmail.onmicrosoft.com"
-  #   module_name =  "storage"
-  #   resource_name = "dhsagab-sharedkv"
-  #   role_name = "Storage Blob Data Contributor"
-  # }
+  {
+    assignee_type = "user"
+    assignee_name = "testnew@shaitsabargmail.onmicrosoft.com"
+    module_name =  "storage"
+    resource_name = "storagetestshaytsa"
+    role_name = "Storage Account Contributor"
+  }
 ]
 
 
