@@ -1,7 +1,7 @@
 locals {
   # User selects these using CLI or env vars
-  env        = get_env("ENV", "dev")
-  user_object_id       = get_env("USER_OBJECT_ID", "shay")
+  env        = get_env("ENV", "vietnam-dev")
+  user_object_id       = get_env("USER_OBJECT_ID", "testuser")
   location             = get_env("LOCATION", "East US")
   tfvars_file = "${get_terragrunt_dir()}/tfvars/${local.env}/${local.user_object_id}.tfvars"
 }
@@ -20,9 +20,9 @@ remote_state {
   backend = "azurerm"
   config = {
     resource_group_name  = "${local.env}-rg"
-    storage_account_name = "${local.env}sta"
-    container_name       = "vietnamdevsta"
-    key                  = "${local.user}.tfstate"
+    storage_account_name = "${replace(local.env, "-", "")}sta"
+    container_name       = "test-cont"
+    key                  = "${local.user_object_id}.tfstate"
   }
 }
 
@@ -45,7 +45,7 @@ EOF
 
 inputs = {
   env      = local.env
-  user_object_id  = local.user
+  user_object_id  = local.user_object_id
   resource_group_name = "${local.env}-rg"
   location = local.location
 
