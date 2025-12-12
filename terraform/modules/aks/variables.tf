@@ -42,8 +42,9 @@ variable "azurerm_user_assigned_identity_eso_id" {
   default     = ""
 }
 
-variable "aks_roles" {
-  description = "List of roles to assign to the AKS Cluster"
-  type        = list(string)
-  default     = ["Reader"]
+variable "aks_config" {
+  description = "AKS Configuration"
 }
+
+
+
