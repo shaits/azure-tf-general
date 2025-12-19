@@ -1,13 +1,13 @@
 data "azurerm_client_config" "current" {}
 
 data "azurerm_private_dns_zone" "azmk8s" {
-  name = "privatelink.${var.location}.azmk8s.io"
+  name = var.private_dns_zone_name
 }
 
 data "azurerm_subnet" "cluster" {
   name                 = "ClusterSubnet"
-  virtual_network_name = "usingsystem-vnet"
-  resource_group_name  = "usingsystem-vnet-rg"
+  virtual_network_name = var.vnet_name
+  resource_group_name  = var.resource_group_name
 }
 
 
@@ -18,7 +18,7 @@ data "azuread_group" "admin_group" {
 
 data "azurerm_key_vault" "usingsystem" {
   name                = "using-system-vault"
-  resource_group_name = "using-system-vault-rg"
+  resource_group_name = var.resource_group_name
 }
   
 data "azurerm_key_vault_certificate" "usingsystem" {

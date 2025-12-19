@@ -1,9 +1,3 @@
-resource "azurerm_resource_group" "aks" {
-  location = var.location
-  name     = "usingsystem-aks-rg"
-  tags     = var.tags
-}
-
 resource "random_id" "aks_prefix" {
   byte_length = 8
 }
@@ -11,7 +5,7 @@ resource "random_id" "aks_prefix" {
 resource "azurerm_user_assigned_identity" "aks" {
   location            = var.location
   name                = "aks-identity"
-  resource_group_name = azurerm_resource_group.aks.name
+  resource_group_name = var.resource_group_name
 
   tags = var.tags
 }
@@ -23,16 +17,11 @@ resource "azurerm_role_assignment" "aks_private_dns" {
 }
 
 module "aks" {
-  depends_on = [
-    azurerm_resource_group.aks, 
-    azurerm_role_assignment.aks_private_dns
-  ]
-
   source = "git::https://github.com/Azure/terraform-azurerm-aks.git//v4?ref=2e3c548c16a0f3e2680d5278d3738742c3702afa"
 
   cluster_name                = "usingsystem-aks"
   prefix                      = random_id.aks_prefix.hex
-  resource_group_name         = azurerm_resource_group.aks.name
+  resource_group_name         = var.resource_group_name
   temporary_name_for_rotation = "poolrot"
 
   kubernetes_version           = var.aks_config.control_plane_version

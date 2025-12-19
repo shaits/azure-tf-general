@@ -3,6 +3,7 @@
 # -------------------------------
 infra_array = [
   
+  ,
   {
     module_name            = "storage"
     name                   = "storagetestshaytsa"

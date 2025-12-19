@@ -29,6 +29,10 @@ module "private_dns_zone" {
   owner_id              = each.value.owner_id
   virtual_network_name  = each.value.vnet_name
   resource_group_name   = var.resource_group_name
+
+  depends_on = [
+    module.vnet
+  ]
 }
 
 module "keyvault" {
@@ -46,6 +50,10 @@ module "keyvault" {
   vnet_name             = each.value.vnet_name
   private_subnet_name   = each.value.private_subnet_name
   private_dns_zone_name = each.value.private_dns_zone_name
+  depends_on = [
+    module.vnet,
+    module.private_dns_zone
+  ]
 }
 
 module "storage" {
@@ -62,6 +70,11 @@ module "storage" {
   vnet_name             = each.value.vnet_name
   private_subnet_name   = each.value.private_subnet_name
   private_dns_zone_name = each.value.private_dns_zone_name
+
+  depends_on = [
+    module.vnet,
+    module.private_dns_zone
+  ]
 }
 
 module "uami" {
@@ -76,18 +89,18 @@ module "uami" {
   resource_group_name   = var.resource_group_name
 }
 
-module "aks" {
-  for_each = {
-    for r in var.infra_array :
-    "${r.name}" => r
-    if r.module_name == "aks"
-  }
-  cluster_name          = each.value.name
-  source                = "./modules/aks"
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-  dns_prefix   = each.value.dns_prefix
-}
+# module "aks" {
+#   for_each = {
+#     for r in var.infra_array :
+#     "${r.name}" => r
+#     if r.module_name == "aks"
+#   }
+#   cluster_name          = each.value.name
+#   source                = "./modules/aks"
+#   location              = var.location
+#   resource_group_name   = var.resource_group_name
+#   dns_prefix   = each.value.dns_prefix
+# }
 
 # RBAC assignments
 
