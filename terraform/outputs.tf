@@ -33,8 +33,8 @@ output "keyvault_uris" {
   value       = can(module.keyvault) ? { for k, m in module.keyvault : k => m.keyvault_uri } : {}
 }
 
-output "kube_configs" {
-  description = "Kubeconfig file for the AKS cluster"
-  value       = can(module.aks) ? { for k, m in module.aks : k => m.kube_config } : {}
-  sensitive   = true
-}
+# output "kube_configs" {
+#   description = "Kubeconfig file for the AKS cluster"
+#   value       = can(module.aks) ? { for k, m in module.aks : k => m.kube_config } : {}
+#   sensitive   = true
+# }

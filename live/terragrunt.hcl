@@ -1,6 +1,6 @@
 locals {
   # User selects these using CLI or env vars
-  env        = get_env("ENV", "vietnam-dev")
+  env        = get_env("ENV", "dev")
   user_object_id       = get_env("USER_OBJECT_ID", "testuser")
   location             = get_env("LOCATION", "East US")
   tfvars_file = "${get_terragrunt_dir()}/tfvars/${local.env}/${local.user_object_id}.tfvars"
