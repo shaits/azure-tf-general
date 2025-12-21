@@ -5,7 +5,7 @@ data "azurerm_private_dns_zone" "azmk8s" {
 }
 
 data "azurerm_subnet" "cluster" {
-  name                 = "ClusterSubnet"
+  name                 = var.private_subnet_name
   virtual_network_name = var.vnet_name
   resource_group_name  = var.resource_group_name
 }

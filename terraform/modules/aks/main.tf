@@ -94,11 +94,6 @@ module "aks" {
   node_os_channel_upgrade    = "NodeImage"
   os_disk_size_gb            = var.aks_config.os_disk_size_gb
 
-  brown_field_application_gateway_for_ingress = {
-    id        = azurerm_application_gateway.app_gtw.id
-    subnet_id = data.azurerm_subnet.app_gtw.id
-  }
-
   maintenance_window = {
     allowed = [
       {

@@ -89,18 +89,21 @@ module "uami" {
   resource_group_name   = var.resource_group_name
 }
 
-# module "aks" {
-#   for_each = {
-#     for r in var.infra_array :
-#     "${r.name}" => r
-#     if r.module_name == "aks"
-#   }
-#   cluster_name          = each.value.name
-#   source                = "./modules/aks"
-#   location              = var.location
-#   resource_group_name   = var.resource_group_name
-#   dns_prefix   = each.value.dns_prefix
-# }
+module "aks" {
+  for_each = {
+    for r in var.infra_array :
+    "${r.name}" => r
+    if r.module_name == "aks"
+  }
+  cluster_name          = each.value.cluster_name
+  source                = "./modules/aks"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  vnet_name             = each.value.vnet_name
+  private_subnet_name   = each.value.private_subnet_name
+  private_dns_zone_name = each.value.private_dns_zone_name
+  aks_config            = each.value.aks_config
+}
 
 # RBAC assignments
 

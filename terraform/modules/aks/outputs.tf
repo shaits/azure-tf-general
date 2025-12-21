@@ -1,43 +1,43 @@
 output "cluster_id" {
   description = "ID of the AKS cluster"
-  value       = azurerm_kubernetes_cluster.aks.id
+  value       = module.aks.aks_id
 }
 
 output "cluster_name" {
   description = "Name of the AKS cluster"
-  value       = azurerm_kubernetes_cluster.aks.name
+  value       = module.aks.aks_name
 }
 
 output "kube_host" {
-  value = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  value = module.aks.kube_config_raw[0].host
 }
 
 output "kube_ca" {
-  value = azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate
+  value = module.aks.kube_config_raw[0].cluster_ca_certificate
 }
 
 output "kube_client_certificate" {
-  value     = azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate
+  value     = module.aks.kube_config_raw[0].client_certificate
   sensitive = true
 }
 
 output "kube_client_key" {
-  value     = azurerm_kubernetes_cluster.aks.kube_config[0].client_key
+  value     = module.aks.kube_config_raw[0].client_key
   sensitive = true
 }
 
 output "kube_config" {
   description = "Kubernetes configuration file"
-  value       = azurerm_kubernetes_cluster.aks.kube_config_raw
+  value       = module.aks.kube_config_raw
   sensitive   = true
 }
 
 output "cluster_fqdn" {
   description = "FQDN of the AKS cluster"
-  value       = azurerm_kubernetes_cluster.aks.fqdn
+  value       = module.aks.cluster_fqdn
 }
 
 output "node_resource_group" {
   description = "Auto-generated resource group for AKS nodes"
-  value       = azurerm_kubernetes_cluster.aks.node_resource_group
+  value       = module.aks.node_resource_group
 }

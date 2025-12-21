@@ -12,16 +12,18 @@ variable "resource_group_name" {
 }
 variable "vnet_name" {
   description = "Name of the vnet"
-  type        = string
-  
+  type        = string 
+}
+variable "private_subnet_name" {
+  description = "Name of the private subnet"
+  type        = string 
 }
 variable "private_dns_zone_name" {
   description = "Name of the private dns zone"
   type        = string
 }
-variable "dns_prefix" {
-  description = "DNS prefix for the AKS cluster"
-  type        = string
+variable "aks_config" {
+  description = "AKS Configuration"
 }
 variable "node_count" {
   description = "Number of nodes in the default node pool"
@@ -44,10 +46,6 @@ variable "azurerm_user_assigned_identity_eso_id" {
   description = "The ID of the User Assigned Identity for federated identity credential"
   type        = string
   default     = ""
-}
-
-variable "aks_config" {
-  description = "AKS Configuration"
 }
 
 
