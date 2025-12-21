@@ -1,5 +1,5 @@
 
-variable "name" {
+variable "friendly_name" {
   description = "The name of the private DNS zone"
   type        = string 
 }
@@ -20,6 +20,7 @@ variable virtual_network_name {
 
 locals {
   private_dns_zone_name = "${var.owner_id}.privatelink.${var.resource_group_name}.azure.net"
+  private_dns_vnet_link_name = "privatelink_${var.friendly_name}_${var.virtual_network_name}"
 }
 
 

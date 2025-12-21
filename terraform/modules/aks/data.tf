@@ -10,18 +10,7 @@ data "azurerm_subnet" "cluster" {
   resource_group_name  = var.resource_group_name
 }
 
-
 data "azuread_group" "admin_group" {
-  display_name     = "USINGSYSTEM_ADMIN"
+  display_name     = "test_group"
   security_enabled = true
-}
-
-data "azurerm_key_vault" "usingsystem" {
-  name                = "using-system-vault"
-  resource_group_name = var.resource_group_name
-}
-  
-data "azurerm_key_vault_certificate" "usingsystem" {
-  name         = "usingsystem"
-  key_vault_id = data.azurerm_key_vault.usingsystem.id
 }

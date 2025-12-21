@@ -9,20 +9,20 @@ output "cluster_name" {
 }
 
 output "kube_host" {
-  value = module.aks.kube_config_raw[0].host
+  value = module.aks.host
 }
 
 output "kube_ca" {
-  value = module.aks.kube_config_raw[0].cluster_ca_certificate
+  value = module.aks.cluster_ca_certificate
 }
 
 output "kube_client_certificate" {
-  value     = module.aks.kube_config_raw[0].client_certificate
+  value     = module.aks.client_certificate
   sensitive = true
 }
 
 output "kube_client_key" {
-  value     = module.aks.kube_config_raw[0].client_key
+  value     = module.aks.client_key
   sensitive = true
 }
 

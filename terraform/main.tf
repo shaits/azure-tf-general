@@ -21,11 +21,11 @@ module "vnet" {
 module "private_dns_zone" {
   for_each = {
     for r in var.infra_array :
-    "${r.name}" => r
+    "${r.friendly_name}" => r
     if r.module_name == "private_dns_zone"
   }
   source                = "./modules/private_dns_zone"
-  name                  = each.value.name
+  friendly_name         = each.value.friendly_name
   owner_id              = each.value.owner_id
   virtual_network_name  = each.value.vnet_name
   resource_group_name   = var.resource_group_name

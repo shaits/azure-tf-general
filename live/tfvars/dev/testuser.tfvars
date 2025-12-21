@@ -9,7 +9,7 @@ infra_array = [
     cluster_name                   = "aks-test-cluster"
     vnet_name                   = "vnet-test"
     private_subnet_name    = "privatesubnet"
-    private_dns_zone_name                   = "private_dns_zone_test"
+    private_dns_zone_name                   = "testnew.privatelink.dev-rg.azure.net"
     aks_config = {
       control_plane_version                  = "1.32.0"
       system_pool_orchestrator_version       = "1.32.0"
@@ -39,7 +39,7 @@ infra_array = [
 
   {
     module_name            = "private_dns_zone"
-    name                   = "private_dns_zone_test"
+    friendly_name                   = "private_dns_zone_test"
     owner_id               = "testnew"
     vnet_name   = "vnet-test"
     tags = {
