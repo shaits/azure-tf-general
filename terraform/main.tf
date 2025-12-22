@@ -26,6 +26,7 @@ module "private_dns_zone" {
   }
   source                = "./modules/private_dns_zone"
   friendly_name         = each.value.friendly_name
+  location              = var.location
   owner_id              = each.value.owner_id
   virtual_network_name  = each.value.vnet_name
   resource_group_name   = var.resource_group_name
@@ -103,6 +104,11 @@ module "aks" {
   private_subnet_name   = each.value.private_subnet_name
   private_dns_zone_name = each.value.private_dns_zone_name
   aks_config            = each.value.aks_config
+  depends_on = [
+    module.vnet,
+    module.private_dns_zone
+  ]
+  
 }
 
 # RBAC assignments

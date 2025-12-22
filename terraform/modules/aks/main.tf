@@ -33,39 +33,41 @@ module "aks" {
   only_critical_addons_enabled = true
   enable_auto_scaling          = false
   agents_size                  = var.aks_config.system_pool_vm_size
-  agents_availability_zones    = var.aks_config.system_pool_availability_zones
   agents_count                 = var.aks_config.system_pool_size_count
-  agents_max_pods              = 100
+  agents_max_pods              = 20
   agents_pool_name             = "systempool"
 
   node_pools = {
     "UserDefaultPool" = {
       name                  = "default"
-      orchestrator_version  = var.aks_config.user_default_pool_orchestrator_version
       enable_auto_scaling   = false
-      zones                 = var.aks_config.user_default_pool_availability_zones
       vm_size               = var.aks_config.user_default_pool_vm_size
       os_disk_size_gb       = var.aks_config.os_disk_size_gb
       priority              = "Regular"
       node_count            = var.aks_config.user_default_pool_size_count
-      max_pods              = 100
+      max_pods              = 20
       vnet_subnet_id        = data.azurerm_subnet.cluster.id
       create_before_destroy = true
+      upgrade_settings = {
+        max_surge                     = 0
+        max_unavailable               = 1
+        drain_timeout_in_minutes      = 30
+        node_soak_duration_in_minutes = 0
+      }
+
     }
     "UserSpotPool" = {
       name                  = "spot"
-      orchestrator_version  = var.aks_config.user_spot_pool_orchestrator_version
       node_taints           = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
       enable_auto_scaling   = true
-      zones                 = var.aks_config.user_spot_pool_availability_zones
       vm_size               = var.aks_config.user_spot_pool_vm_size
       os_disk_size_gb       = var.aks_config.os_disk_size_gb
-      os_disk_type          = "Ephemeral"
+      os_disk_type          = "Managed"
       priority              = "Spot"
       eviction_policy       = "Delete"
       min_count             = var.aks_config.user_spot_pool_size_min_count
       max_count             = var.aks_config.user_spot_pool_size_max_count
-      max_pods              = 100
+      max_pods              = 20
       vnet_subnet_id        = data.azurerm_subnet.cluster.id
       create_before_destroy = true
     }
@@ -81,7 +83,6 @@ module "aks" {
   rbac_aad                          = true
   rbac_aad_managed                  = true
   role_based_access_control_enabled = true
-  enable_host_encryption            = true
   rbac_aad_tenant_id                = data.azurerm_client_config.current.tenant_id
   rbac_aad_admin_group_object_ids   = [data.azuread_group.admin_group.object_id]
   oidc_issuer_enabled               = true

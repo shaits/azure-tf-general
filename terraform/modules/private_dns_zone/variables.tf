@@ -18,8 +18,13 @@ variable virtual_network_name {
   type        = string
 }
 
+variable location {
+  description = "location"
+  type        = string
+}
+
 locals {
-  private_dns_zone_name = "${var.owner_id}.privatelink.${var.resource_group_name}.azure.net"
+  private_dns_zone_name = "${var.owner_id}.privatelink.${replace(var.location, " ", "")}.azmk8s.io"
   private_dns_vnet_link_name = "privatelink_${var.friendly_name}_${var.virtual_network_name}"
 }
 
