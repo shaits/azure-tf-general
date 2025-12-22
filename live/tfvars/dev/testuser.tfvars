@@ -18,9 +18,6 @@ infra_array = [
       system_pool_size_count                 = 2
       user_default_pool_vm_size              = "Standard_B2s"
       user_default_pool_size_count           = 1
-      user_spot_pool_vm_size                 = "standard_d16as_v6"
-      user_spot_pool_size_min_count          = 2
-      user_spot_pool_size_max_count          = 5
       services_cidr                          = "192.169.0.0/16"
       dns_service_ip                         = "192.169.0.10"
     }

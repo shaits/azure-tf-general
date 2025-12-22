@@ -49,27 +49,11 @@ module "aks" {
       vnet_subnet_id        = data.azurerm_subnet.cluster.id
       create_before_destroy = true
       upgrade_settings = {
-        max_surge                     = 0
-        max_unavailable               = 1
+        max_surge                     = "1"
         drain_timeout_in_minutes      = 30
         node_soak_duration_in_minutes = 0
       }
 
-    }
-    "UserSpotPool" = {
-      name                  = "spot"
-      node_taints           = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
-      enable_auto_scaling   = true
-      vm_size               = var.aks_config.user_spot_pool_vm_size
-      os_disk_size_gb       = var.aks_config.os_disk_size_gb
-      os_disk_type          = "Managed"
-      priority              = "Spot"
-      eviction_policy       = "Delete"
-      min_count             = var.aks_config.user_spot_pool_size_min_count
-      max_count             = var.aks_config.user_spot_pool_size_max_count
-      max_pods              = 20
-      vnet_subnet_id        = data.azurerm_subnet.cluster.id
-      create_before_destroy = true
     }
   }
 
