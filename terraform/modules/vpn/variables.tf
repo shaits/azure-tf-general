@@ -76,14 +76,10 @@ variable "root_certificate_name" {
 }
 
 variable "root_certificate_public_cert_data" {
-  description = <<EOT
-Public cert data (Base64) of the *root* certificate in PEM format, without the private key.
-Example usually taken from the root cert .cer/.pem and base64-encoded.
-EOT
   type      = string
-  default   = null
   sensitive = true
 }
+
 
 # ----------------------------
 # Azure AD authentication (optional)
@@ -121,4 +117,16 @@ variable "tags" {
   description = "Tags to apply to resources."
   type        = map(string)
   default     = {}
+}
+
+# ----------------------------
+# Locals
+# ----------------------------
+
+locals {
+  # P2S auth types accepted by the gateway: "Certificate" and/or "AAD"
+  vpn_auth_types = compact([
+    var.enable_cert_auth ? "Certificate" : null,
+    var.enable_aad_auth  ? "AAD" : null
+  ])
 }

@@ -1,26 +1,3 @@
-terraform {
-  required_version = ">= 1.5.0"
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.80.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-locals {
-  # P2S auth types accepted by the gateway: "Certificate" and/or "AAD"
-  vpn_auth_types = compact([
-    var.enable_cert_auth ? "Certificate" : null,
-    var.enable_aad_auth  ? "AAD" : null
-  ])
-}
-
 resource "azurerm_public_ip" "vpn_gw_pip" {
   name                = "${var.name}-pip"
   location            = var.location
@@ -62,15 +39,6 @@ resource "azurerm_virtual_network_gateway" "vpn_gw" {
       content {
         name             = var.root_certificate_name
         public_cert_data = var.root_certificate_public_cert_data
-      }
-    }
-
-    dynamic "aad" {
-      for_each = var.enable_aad_auth ? [1] : []
-      content {
-        tenant   = var.aad_tenant
-        audience = var.aad_audience
-        issuer   = var.aad_issuer
       }
     }
   }

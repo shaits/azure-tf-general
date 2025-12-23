@@ -48,6 +48,9 @@ inputs = {
   user_object_id  = local.user_object_id
   resource_group_name = "${local.env}-rg"
   location = local.location
+  root_certificate_public_cert_data = filebase64(
+    "${get_terragrunt_dir()}/../terraform/modules/vpn/certs/root-cert-public.pem"
+  )
 
 }
 

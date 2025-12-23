@@ -36,15 +36,20 @@ module "private_dns_zone" {
   ]
 }
 
-module "p2s_vpn" {
-  source              = "./modules/vpn-"
-  name                = "shay-dev-vpn"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  gateway_subnet_id   = module.vnet["${var.vnet_name}"].vpn_subnet_id
-  vpn_client_address_pool = ["172.16.200.0/24"]
-  enable_cert_auth = true
-  root_certificate_public_cert_data = filebase64("${path.module}/certs/root-cert-public.pem")
+module "vpn" {
+  for_each = {
+    for r in var.infra_array :
+    "${r.name}" => r
+    if r.module_name == "vpn"
+  }
+  source                            = "./modules/vpn"
+  name                              = each.value.name
+  resource_group_name               = var.resource_group_name
+  location                          = var.location
+  gateway_subnet_id                 = module.vnet["${each.value.vnet_name}"].vpn_subnet_id
+  vpn_client_address_pool           = each.value.vpn_client_address_pool
+  enable_cert_auth                  = true
+  root_certificate_public_cert_data = var.root_certificate_public_cert_data
   tags = {
     owner = "shay"
     env   = "dev"
@@ -106,29 +111,26 @@ module "uami" {
   resource_group_name   = var.resource_group_name
 }
 
-
-
-
-# module "aks" {
-#   for_each = {
-#     for r in var.infra_array :
-#     "${r.name}" => r
-#     if r.module_name == "aks"
-#   }
-#   cluster_name          = each.value.cluster_name
-#   source                = "./modules/aks"
-#   location              = var.location
-#   resource_group_name   = var.resource_group_name
-#   vnet_name             = each.value.vnet_name
-#   private_subnet_name   = each.value.private_subnet_name
-#   private_dns_zone_name = each.value.private_dns_zone_name
-#   aks_config            = each.value.aks_config
-#   depends_on = [
-#     module.vnet,
-#     module.private_dns_zone
-#   ]
+module "aks" {
+  for_each = {
+    for r in var.infra_array :
+    "${r.name}" => r
+    if r.module_name == "aks"
+  }
+  cluster_name          = each.value.cluster_name
+  source                = "./modules/aks"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  vnet_name             = each.value.vnet_name
+  private_subnet_name   = each.value.private_subnet_name
+  private_dns_zone_name = each.value.private_dns_zone_name
+  aks_config            = each.value.aks_config
+  depends_on = [
+    module.vnet,
+    module.private_dns_zone
+  ]
   
-# }
+}
 
 # RBAC assignments
 

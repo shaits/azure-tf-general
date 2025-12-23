@@ -21,3 +21,9 @@ variable "location" {
 variable "env" {
   type    = string
 }
+
+variable "root_certificate_public_cert_data" {
+  type      = string
+  sensitive = true
+}
+
