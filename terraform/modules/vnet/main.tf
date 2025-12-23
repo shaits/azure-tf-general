@@ -14,6 +14,13 @@ resource "azurerm_subnet" "private" {
   private_link_service_network_policies_enabled = false
 }
 
+resource "azurerm_subnet" "vpn" {
+  name                 = "GatewaySubnet" # must be this name!
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
 resource "azurerm_public_ip" "nat_ip" {
   name                = "nat-ip"
   location            = var.location

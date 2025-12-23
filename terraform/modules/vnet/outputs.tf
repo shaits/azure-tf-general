@@ -9,3 +9,6 @@ output "vnet_id" {
 output "private_subnet_id" {
   value = azurerm_subnet.private.id
 }
+output "vpn_subnet_id" {
+  value = azurerm_subnet.vpn.id
+}
