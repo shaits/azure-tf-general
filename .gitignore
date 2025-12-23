@@ -7,3 +7,7 @@
 
 # Ignore Terraform working directory
 *.terraform/
+
+live/*
+.vscode/*
+env/*
